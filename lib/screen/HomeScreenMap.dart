@@ -1,3 +1,4 @@
+import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:ui' as ui;
 
@@ -20,6 +21,7 @@ import 'package:rakashkh/screen/Settings_With_Destination.dart';
 import 'package:rakashkh/widgets/round_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class HomeScreenMap extends StatefulWidget {
   const HomeScreenMap({super.key});
 
@@ -28,7 +30,7 @@ class HomeScreenMap extends StatefulWidget {
 }
 
 class _HomeScreenMapState extends State<HomeScreenMap> {
-  late MainScreenProvider mainProvider;
+   MainScreenProvider? mainProvider;
 
   double latitude = 21.2266;
   double longitude = 72.8312;
@@ -37,7 +39,7 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
   final List<Marker> _markers = <Marker>[];
 
   final Completer<GoogleMapController> _controller = Completer();
-  static const CameraPosition cameraPosition = CameraPosition(
+      CameraPosition cameraPosition = CameraPosition(
     target: LatLng(20.42796133580664, 75.885749655962),
     zoom: 14.4746,
   );
@@ -64,35 +66,52 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
       Permission.location,
           Permission.camera,
       ].request();
-      await Geolocator.requestPermission();
-      //     .then((value) {})
-      //     .onError((error, stackTrace) async {
-      //   await Geolocator.requestPermission();
-      // });
-      final position = await Geolocator.getCurrentPosition();
-      latitude = position.latitude;
-      longitude = position.longitude;
-      CameraPosition cameraPosition = CameraPosition(
-        target: LatLng(position.latitude, position.longitude),
-        zoom: 14,
-      );
+      await Geolocator.requestPermission()
+      // ;
+          .then((value) async {
+        final position = await Geolocator.getCurrentPosition();
+        latitude = position.latitude;
+        longitude = position.longitude;
+         cameraPosition = CameraPosition(
+          target: LatLng(position.latitude, position.longitude),
+          zoom: 14,
+        );
+      })
+          .onError((error, stackTrace) async {
+        await Geolocator.requestPermission();
+      });
+      // await getCurrentLocation();
+      // final position = await Geolocator.getCurrentPosition();
+      // latitude = position.latitude;
+      // longitude = position.longitude;
+      // CameraPosition cameraPosition = CameraPosition(
+      //   target: LatLng(position.latitude, position.longitude),
+      //   zoom: 14,
+      // );
 
       final GoogleMapController controller = await _controller.future;
       controller.animateCamera(
         CameraUpdate.newCameraPosition(cameraPosition),
       );
 
-      // setState(() {});
 
-      mainProvider
+
+      mainProvider!
           .getNearestLoaction(latitude: latitude, longitude: longitude)
           .then((value) {
         _initializeMap();
       });
 
+      // var url = Uri.parse("https://rakshak-backend-dev.onrender.com/api/v1/organization/nearest-organization/$latitude,$longitude");
+      // var response = await http.get(url);
+      // print('Response status: ${response.statusCode}');
+      // print('get nearest location: ${response.body}');
+
+      setState(() {});
+
     });
 
-    getprefrences();
+    // getprefrences();
     // _getPermission();
     authProvider = context.read<AuthenticationProvider>();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -260,7 +279,7 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
 
     setState(() {});
 
-    mainProvider
+    mainProvider!
         .getNearestLoaction(latitude: latitude, longitude: longitude)
         .then((value) {
       _initializeMap();
@@ -288,11 +307,13 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
         });
       },
     );
-    for (var e in mainProvider.firedepartmentLocationList) {
+
+
+    for (var e in mainProvider!.fireList1) {
       fireMarker = await getBytesFromAsset("assets/fire.png", 100);
       createMarker(
-        latitude: e.location.coordinates[1],
-        longitude: e.location.coordinates[0],
+        latitude: e["location"]["coordinates"][1],
+        longitude: e["location"]["coordinates"][0],
         icon: fireMarker,
         onTap: () {
 
@@ -303,14 +324,14 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
         },
       );
     }
-
-    for (var e in mainProvider.hospitaldepartmentLocationList) {
+    for (var e in mainProvider!.hospitalList1) {
       hospitalMarker = await getBytesFromAsset("assets/hospital.png", 100);
       createMarker(
-        latitude: e.location.coordinates[1],
-        longitude: e.location.coordinates[0],
+        latitude: e["location"]["coordinates"][1],
+        longitude: e["location"]["coordinates"][0],
         icon: hospitalMarker,
         onTap: () {
+
           setState(() {
             model = DepartmentLocation.fromJson(e.toJson());
             cardShow = true;
@@ -318,13 +339,14 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
         },
       );
     }
-    for (var e in mainProvider.policedepartmentLocationList) {
+    for (var e in mainProvider!.policeList1) {
       policeMarker = await getBytesFromAsset("assets/Police.png", 100);
       createMarker(
-        latitude: e.location.coordinates[1],
-        longitude: e.location.coordinates[0],
+        latitude: e["location"]["coordinates"][1],
+        longitude: e["location"]["coordinates"][0],
         icon: policeMarker,
         onTap: () {
+
           setState(() {
             model = DepartmentLocation.fromJson(e.toJson());
             cardShow = true;
@@ -332,6 +354,49 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
         },
       );
     }
+    // for (var e in mainProvider!.firedepartmentLocationList) {
+    //   fireMarker = await getBytesFromAsset("assets/fire.png", 100);
+    //   createMarker(
+    //     latitude: e.location.coordinates[1],
+    //     longitude: e.location.coordinates[0],
+    //     icon: fireMarker,
+    //     onTap: () {
+    //
+    //       setState(() {
+    //         model = DepartmentLocation.fromJson(e.toJson());
+    //         cardShow = true;
+    //       });
+    //     },
+    //   );
+    // }
+    // for (var e in mainProvider!.hospitaldepartmentLocationList) {
+    //   hospitalMarker = await getBytesFromAsset("assets/hospital.png", 100);
+    //   createMarker(
+    //     latitude: e.location.coordinates[1],
+    //     longitude: e.location.coordinates[0],
+    //     icon: hospitalMarker,
+    //     onTap: () {
+    //       setState(() {
+    //         model = DepartmentLocation.fromJson(e.toJson());
+    //         cardShow = true;
+    //       });
+    //     },
+    //   );
+    // }
+    // for (var e in mainProvider!.policedepartmentLocationList) {
+    //   policeMarker = await getBytesFromAsset("assets/Police.png", 100);
+    //   createMarker(
+    //     latitude: e.location.coordinates[1],
+    //     longitude: e.location.coordinates[0],
+    //     icon: policeMarker,
+    //     onTap: () {
+    //       setState(() {
+    //         model = DepartmentLocation.fromJson(e.toJson());
+    //         cardShow = true;
+    //       });
+    //     },
+    //   );
+    // }
     setState(() {});
   }
 
@@ -369,4 +434,24 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
       // print("home screen token token $token");
     });
   }
+
+
+   // Future<void> getCurrentLocation()
+   // async {
+   //   final position = await Geolocator.getCurrentPosition();
+   //   setState(()  {
+   //     latitude = position.latitude;
+   //     longitude = position.longitude;
+   //     CameraPosition cameraPosition = CameraPosition(
+   //       target: LatLng(position.latitude, position.longitude),
+   //       zoom: 14,
+   //     );
+   //
+   //   });
+   //   final GoogleMapController controller = await _controller.future;
+   //   controller.animateCamera(
+   //     CameraUpdate.newCameraPosition(cameraPosition),
+   //   );
+   //   print(latitude);
+   // }
 }

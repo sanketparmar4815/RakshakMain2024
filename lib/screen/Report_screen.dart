@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:rakashkh/app/Palette.dart';
 import 'package:rakashkh/app/dimensions.dart';
 import 'package:rakashkh/custom_widget/cards.dart';
-import 'package:rakashkh/model/nearest_location_data_model.dart';
 import 'package:rakashkh/provider/mainScreenProvider.dart';
 import 'package:rakashkh/provider/reportProvider.dart';
 import 'package:rakashkh/screen/BottomNavScreen.dart';
@@ -39,17 +39,20 @@ class _ReportScreenState extends State<ReportScreen> {
   final ImagePicker picker = ImagePicker();
 
   File? imageFile;
-  bool isVideo = false;
 
-  late MainScreenProvider mainprovider;
+  // bool isVideo = false;
+
+  // late PageController _pageController;
+  // late MainScreenProvider mainprovider;
   late ReportProvider reportProvider;
 
-  Departments? fireModel;
-  Departments? policeModel;
-  Departments? hospitalModel;
-  List<Departments> fireModelList = [];
-  List<Departments> policeModelList = [];
-  List<Departments> hospitalModelList = [];
+  // Departments? fireModel;
+  // Departments? policeModel;
+  // Departments? hospitalModel;
+
+  // List<Departments> fireModelList = [];
+  // List<Departments> policeModelList = [];
+  // List<Departments> hospitalModelList = [];
 
   // String? token = IntroScreen.pref!.getString("token");
   // String? userNumber = IntroScreen.pref!.getString("UserNumber");
@@ -64,43 +67,71 @@ class _ReportScreenState extends State<ReportScreen> {
   bool initialPolice = false;
   List<String> departmentId = [];
 
-  int? FireId;
+  int? fireId;
   final dio = Dio();
 
-  double? latitude ;
-  double? longitude ;
+  double? latitude;
+  double? longitude;
 
   @override
   void initState() {
     super.initState();
-    mainprovider = context.read<MainScreenProvider>();
+
+    // mainprovider = context.read<MainScreenProvider>();
     reportProvider = context.read<ReportProvider>();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await getCurrentLocation();
+    // print(" when i page open => ${selectedImages}");
+    //
+    // for (var x in mainprovider.fireList) {
+    //   fireModel = Departments.fromJson(x.toJson());
+    //   fireModelList.add(fireModel!);
+    // }
+    // for (var x in mainprovider.policeList) {
+    //   policeModel = Departments.fromJson(x.toJson());
+    //   policeModelList.add(policeModel!);
+    // }
+    // for (var x in mainprovider.hospitalDataList) {
+    //   hospitalModel = Departments.fromJson(x.toJson());
+    //   hospitalModelList.add(hospitalModel!);
+    // }
 
-      for (var x in mainprovider.fireList) {
-        fireModel = Departments.fromJson(x.toJson());
-        fireModelList.add(fireModel!);
-      }
-      for (var x in mainprovider.policeList) {
-        policeModel = Departments.fromJson(x.toJson());
-        policeModelList.add(policeModel!);
-      }
-      for (var x in mainprovider.hospitalDataList) {
-        hospitalModel = Departments.fromJson(x.toJson());
-        hospitalModelList.add(hospitalModel!);
-      }
-      // token = IntroScreen.pref!.getString("token");
-      // userNumber = IntroScreen.pref!.getString("UserNumber");
+    getCurrentLocation();
+    // token = IntroScreen.pref!.getString("token");
+    // userNumber = IntroScreen.pref!.getString("UserNumber");
+    // print("token is ${token} ${userNumber}");
 
-    });
-    setState(() {});
+    // setState(() {});
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    // mainprovider = context.read<MainScreenProvider>();
+    // reportProvider = context.read<ReportProvider>();
+    //
+    //   for (var x in mainprovider.fireList) {
+    //     fireModel = Departments.fromJson(x.toJson());
+    //     fireModelList.add(fireModel!);
+    //   }
+    //   for (var x in mainprovider.policeList) {
+    //     policeModel = Departments.fromJson(x.toJson());
+    //     policeModelList.add(policeModel!);
+    //   }
+    //   for (var x in mainprovider.hospitalDataList) {
+    //     hospitalModel = Departments.fromJson(x.toJson());
+    //     hospitalModelList.add(hospitalModel!);
+    //   }
+    //   // await getCurrentLocation();
+    //   // setState(() {
+    //   //
+    //   // });
+    //
+    //   // token = IntroScreen.pref!.getString("token");
+    //   // userNumber = IntroScreen.pref!.getString("UserNumber");
+    //
+    // });
+    // setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     print("build report screen page ");
-    mainprovider = context.watch<MainScreenProvider>();
+    // mainprovider = context.watch<MainScreenProvider>();
     reportProvider = context.watch<ReportProvider>();
 
     return SafeArea(
@@ -171,15 +202,12 @@ class _ReportScreenState extends State<ReportScreen> {
                   );
                 }).toList(),
                 onChanged: (value) async {
-                    // if(value == "Current Location")
-                      {
-
-                  setState(()  {
-                    selectedDesignation = value!;
-                  });
-
-                      }
-
+                  // if(value == "Current Location")
+                  {
+                    setState(() {
+                      selectedDesignation = value!;
+                    });
+                  }
                 },
               ),
             ),
@@ -201,10 +229,8 @@ class _ReportScreenState extends State<ReportScreen> {
                   keyboardType: TextInputType.number,
                   cursorColor: Palette.appbar,
                   maxLength: 10,
-
-
                   decoration: InputDecoration(
-                    counterText: "",
+                      counterText: "",
                       fillColor: Colors.white,
                       filled: true,
                       hintText: "Enter Your Contact Number",
@@ -363,130 +389,175 @@ class _ReportScreenState extends State<ReportScreen> {
             departmanet: "FIRE SERVICE",
             svg: "assets/fire.svg",
           ),
-          CarouselSlider.builder(
-            carouselController: CarouselController(),
-            itemCount: fireModelList.length,
-            itemBuilder: (BuildContext context, int i, int pageViewIndex) {
-              return fireModelList.isNotEmpty
-                  ? CardWidget(
-                      shadow: false,
-                      address: fireModelList[i].address,
-                      phoneNumber: removeBrackets("${fireModelList[i].number}"),
-                      stationName: fireModelList[i].name,
-                      color: initialFire
-                          ? i == fire
-                              ? Colors.green
-                              : Palette.redLight
-                          : Palette.redLight,
-                      svg: 'assets/fire.svg',
-                      onTap: () {
-                        initialFire = true;
-                        fire = i;
-                        departmentId.add(fireModelList[fire].sId.toString());
+          Consumer<MainScreenProvider>(
+            builder: (context, value, child) {
 
-                        setState(() {});
-                        if (kDebugMode) {
-                          print("Firestation id ==> ${fireModelList[i].sId}");
-                        }
-                      },
-                      stationTitle: fireModelList[i].name,
-                      // ischeck: isCheck
-                    )
-                  : const SizedBox();
+              return CarouselSlider.builder(
+                carouselController: CarouselController(),
+                itemCount: value.fireList1.length,
+                itemBuilder: (BuildContext context, int i, int pageViewIndex) {
+                  return value.fireList1.isNotEmpty
+                      ? CardWidget(
+                          shadow: false,
+                          address: value.fireList1[i]["address"],
+                          phoneNumber: value.fireList1[i]["number"][0],
+                          stationName: value.fireList1[i]["name"],
+                          color: initialFire
+                              ? i == value.fire
+                                  ? Colors.green
+                                  : Palette.redLight
+                              : Palette.redLight,
+                          svg: 'assets/fire.svg',
+                          onTap: () {
+                            initialFire = true;
+                            // fire = i;
+                            value.setFire(i);
+                            departmentId
+                                .add(value.fireList1[i]["_id"].toString());
+// setState(() {
+//
+// });
+                          },
+
+                          stationTitle: value.fireList1[i]["name"],
+                          // ischeck: isCheck
+                        )
+                      : const SizedBox();
+                },
+                options: CarouselOptions(
+                    height: 215.0,
+                    enableInfiniteScroll: false,
+                    initialPage: 0,
+                    enlargeCenterPage: false,
+                    viewportFraction: .85),
+              );
             },
-            options: CarouselOptions(
-                height: 215.0,
-                enableInfiniteScroll: false,
-                initialPage: 0,
-                enlargeCenterPage: false,
-                viewportFraction: .85),
           ),
+          // CarouselSlider.builder(
+          //   carouselController: CarouselController(),
+          //   itemCount: fireModelList.length,
+          //   itemBuilder: (BuildContext context, int i, int pageViewIndex) {
+          //     return fireModelList.isNotEmpty
+          //         ? CardWidget(
+          //             shadow: false,
+          //             address: fireModelList[i].address,
+          //             phoneNumber: removeBrackets("${fireModelList[i].number}"),
+          //             stationName: fireModelList[i].name,
+          //             color: initialFire
+          //                 ? i == fire
+          //                     ? Colors.green
+          //                     : Palette.redLight
+          //                 : Palette.redLight,
+          //             svg: 'assets/fire.svg',
+          //             onTap: () {
+          //               initialFire = true;
+          //               fire = i;
+          //               departmentId.add(fireModelList[fire].sId.toString());
+          //
+          //               setState(() {});
+          //               if (kDebugMode) {
+          //                 print("Firestation id ==> ${fireModelList[i].sId}");
+          //               }
+          //             },
+          //             stationTitle: fireModelList[i].name,
+          //             // ischeck: isCheck
+          //           )
+          //         : const SizedBox();
+          //   },
+          //   options: CarouselOptions(
+          //       height: 215.0,
+          //       enableInfiniteScroll: false,
+          //       initialPage: 0,
+          //       enlargeCenterPage: false,
+          //       viewportFraction: .85),
+          // ),
           CardTitle(
             color: Palette.yellow,
             departmanet: "POLICE SERVICES",
             svg: "assets/Police.svg",
           ),
-          CarouselSlider.builder(
-            itemCount: policeModelList.length,
-            itemBuilder: (BuildContext context, int i, int pageViewIndex) {
-              return policeModelList.isNotEmpty
-                  ? CardWidget(
-                      shadow: false,
-                      address: policeModelList[i].address,
+          Consumer<MainScreenProvider>(
+            builder: (context, value, child) {
+              return CarouselSlider.builder(
+                itemCount: value.policeList1.length,
+                itemBuilder: (BuildContext context, int i, int pageViewIndex) {
+                  return value.policeList1.isNotEmpty
+                      ? CardWidget(
+                          shadow: false,
+                          address: value.policeList1[i]["address"],
+                          phoneNumber: value.policeList1[i]["number"][0],
 
-                      phoneNumber:
-                          removeBrackets("${policeModelList[i].number}"),
-                      stationName: policeModelList[i].name,
-                      color: initialPolice
-                          ? i == police
-                              ? Colors.green
-                              : Palette.yellow
-                          : Palette.yellow,
-                      svg: 'assets/Police.svg',
-                      onTap: () {
-                        initialPolice = true;
-                        police = i;
-                        departmentId
-                            .add(policeModelList[police].sId.toString());
-
-                        setState(() {
-                          print("police sid ==>${policeModelList[i].sId}");
-                        });
-                      },
-                      stationTitle: policeModelList[i].name,
-                      // ischeck: false,
-                    )
-                  : const SizedBox();
+                          stationName: value.policeList1[i]["name"],
+                          color: initialPolice
+                              ? i == value.police
+                                  ? Colors.green
+                                  : Palette.yellow
+                              : Palette.yellow,
+                          svg: 'assets/Police.svg',
+                          onTap: () {
+                            initialPolice = true;
+                            // police = i;
+                            value.setPolice(i);
+                            departmentId
+                                .add(value.policeList1[i]["_id"].toString());
+                          },
+                          stationTitle: value.policeList1[i]["name"],
+                          // ischeck: false,
+                        )
+                      : const SizedBox();
+                },
+                options: CarouselOptions(
+                    height: 215.0,
+                    enableInfiniteScroll: false,
+                    initialPage: 0,
+                    enlargeCenterPage: false,
+                    viewportFraction: .85),
+              );
             },
-            options: CarouselOptions(
-                height: 215.0,
-                enableInfiniteScroll: false,
-                initialPage: 0,
-                enlargeCenterPage: false,
-                viewportFraction: .85),
           ),
           CardTitle(
             color: Palette.card_blue,
             departmanet: "HOSPITAL SERVICE",
             svg: "assets/heart-pulse.svg",
           ),
-          CarouselSlider.builder(
-            itemCount: hospitalModelList.length,
-            itemBuilder: (BuildContext context, int i, int pageViewIndex) {
-              return hospitalModelList.isNotEmpty
-                  ? CardWidget(
-                      shadow: false,
-                      address: hospitalModelList[i].address,
+          Consumer<MainScreenProvider>(
+            builder: (context, value, child) {
+              return CarouselSlider.builder(
+                itemCount: value.hospitalList1.length,
+                itemBuilder: (BuildContext context, int i, int pageViewIndex) {
+                  return value.hospitalList1.isNotEmpty
+                      ? CardWidget(
+                          shadow: false,
+                          address: value.hospitalList1[i]["address"],
 
-                      phoneNumber:
-                          removeBrackets("${hospitalModelList[i].number}"),
-                      stationName: "${hospitalModelList[i].name}",
-                      color: initialHospital
-                          ? i == hospital
-                              ? Colors.green
-                              : Palette.card_blue
-                          : Palette.card_blue,
-                      svg: "assets/heart-pulse.svg",
-                      onTap: () {
-                        initialHospital = true;
-                        hospital = i;
-                        departmentId
-                            .add(hospitalModelList[police].sId.toString());
-                        setState(() {
-                          print("hosptal sid == >${hospitalModelList[i].sId}");
-                        });
-                      },
-                      stationTitle: hospitalModelList[i].name,
-                      // ischeck: false,
-                    )
-                  : const SizedBox();
+                          phoneNumber: value.hospitalList1[i]["number"][0],
+                          stationName: value.hospitalList1[i]["name"],
+                          color: initialHospital
+                              ? i == value.hospital
+                                  ? Colors.green
+                                  : Palette.card_blue
+                              : Palette.card_blue,
+                          svg: "assets/heart-pulse.svg",
+                          onTap: () {
+                            initialHospital = true;
+                            // hospital = i;
+                            value.setHospital(i);
+                            departmentId
+                                .add(value.hospitalList1[i]["_id"].toString());
+                          },
+                          stationTitle: value.hospitalList1[i]["name"],
+                          // ischeck: false,
+                        )
+                      : const SizedBox();
+                },
+                options: CarouselOptions(
+                    height: 215.0,
+                    enableInfiniteScroll: false,
+                    initialPage: 0,
+                    enlargeCenterPage: false,
+                    viewportFraction: .85),
+              );
             },
-            options: CarouselOptions(
-                height: 215.0,
-                enableInfiniteScroll: false,
-                initialPage: 0,
-                enlargeCenterPage: false,
-                viewportFraction: .85),
           ),
         ],
       ),
@@ -502,14 +573,13 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Future<void> getCurrentLocation()
-  async {
+  Future<void> getCurrentLocation() async {
     final position = await Geolocator.getCurrentPosition();
-    setState(() {
-      latitude = position.latitude;
-      longitude = position.longitude;
-    });
-    print(latitude);
+    // setState(() {
+    reportProvider.setLatlong(position.latitude, position.longitude);
+    //   latitude = position.latitude;
+    //   longitude = position.latitude;
+    // });
   }
 
   Widget _typeBox() {
@@ -530,48 +600,53 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Widget _sendButton() {
-    return SizedBox(
-      width: 200,
-      height: 50,
-      child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              backgroundColor: Palette.card_blue,
-              side: const BorderSide(width: 2, color: Palette.commoncolor)),
-          onPressed: () async {
-            reportProvider.ReportDioApi(
-                    selectedImages[0],
-                    [longitude!,latitude!],
-                    contactNumber.text ,
-                    departmentId,
-                    describeController.text,
-                     )
-                .then(
-              (value) async {
-                if (kDebugMode) {
+    return Consumer<ReportProvider>(
+      builder: (context, value, child) {
+        return SizedBox(
+          width: 200,
+          height: 50,
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  backgroundColor: Palette.card_blue,
+                  side: const BorderSide(width: 2, color: Palette.commoncolor)),
+              onPressed: () async {
+                print(value.location);
+                reportProvider.ReportDioApi(
+                  selectedImages[0],
+                  value.location,
 
-                }
-                if (value) {
-                  ToastMassage().toastMeassage("Report upload successfully");
+                  // [longitude!, latitude!],
+                  contactNumber.text,
+                  departmentId,
+                  describeController.text,
+                ).then(
+                  (value) async {
+                    if (kDebugMode) {}
+                    if (value) {
+                      ToastMassage()
+                          .toastMeassage("Report upload successfully");
 
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const BottomNavBar();
-                    },
-                  ));
-                } else {
-                  if (kDebugMode) {
-                    print("invalid data");
-                  }
-                }
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return const BottomNavBar();
+                        },
+                      ));
+                    } else {
+                      if (kDebugMode) {
+                        print("invalid data");
+                      }
+                    }
+                  },
+                );
               },
-            );
-          },
-          child: const Text(
-            "SEND",
-            style: TextStyle(fontSize: 20),
-          )),
+              child: const Text(
+                "SEND",
+                style: TextStyle(fontSize: 20, color: Palette.commoncolor),
+              )),
+        );
+      },
     );
   }
 
@@ -605,7 +680,6 @@ class _ReportScreenState extends State<ReportScreen> {
                     children: [
                       InkWell(
                           onTap: () async {
-
                             pickImageByCamera();
                             // pickImageByGallery();
                           },
@@ -686,7 +760,6 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   void pickImageByCamera() async {
-
     final XFile? pickedFileImage = await picker.pickImage(
       source: ImageSource.camera,
     );
@@ -706,7 +779,7 @@ class _ReportScreenState extends State<ReportScreen> {
         selectedImages.add(File(pickedFileVideo.path));
 
         if (kDebugMode) {
-          print("imgae path == > ${selectedImages[0]}");
+          print("image path == > ${selectedImages[0]}");
         }
       });
     }

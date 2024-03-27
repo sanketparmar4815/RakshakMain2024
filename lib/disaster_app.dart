@@ -8,6 +8,7 @@ import 'package:rakashkh/1Demo/Login_view.dart';
 import 'package:rakashkh/app/Palette.dart';
 import 'package:rakashkh/app/globals.dart';
 import 'package:rakashkh/auth/intro_screen.dart';
+import 'package:rakashkh/provider/aboutmeProvider.dart';
 import 'package:rakashkh/provider/authprovider.dart';
 import 'package:rakashkh/provider/getAllVehicle.dart';
 import 'package:rakashkh/provider/mainScreenProvider.dart';
@@ -57,6 +58,8 @@ class DisasterAppState extends State<DisasterApp> {
       providers: [
         ChangeNotifierProvider(
           create: (context) => AuthenticationProvider(),
+        ),ChangeNotifierProvider(
+          create: (context) => AboutMeProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => MainScreenProvider(),
@@ -115,8 +118,8 @@ class PreLoaderState extends State<PreLoader> {
 
   @override
   Widget build(BuildContext context) {
-    return const BottomNavBar();
-    // return const LoginScreenDemo();
+    // return const BottomNavBar();
+    return const LoginScreenDemo();
     // return const IntroScreen();
   }
 }

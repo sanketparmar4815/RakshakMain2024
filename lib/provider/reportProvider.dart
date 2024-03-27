@@ -8,8 +8,24 @@ import 'package:http/http.dart' as http;
 import 'package:rakashkh/model/Oprationreport.dart';
 
 class ReportProvider extends ChangeNotifier {
+
   var dio = Dio();
-  OperationReport? operationReport;
+  // OperationReport? operationReport;
+
+List<double> _location = [];
+
+
+
+
+  List<double> get location => _location;
+
+
+
+  setLatlong(double latitude, double longitude )
+  {
+    _location = [longitude,latitude];
+    notifyListeners();
+  }
 
   Future<bool> ReportDioApi(
     File selectedImag,
@@ -18,17 +34,20 @@ class ReportProvider extends ChangeNotifier {
     List<String> departmentSid,
     String description,
 
+
   ) async {
+    print(usernumber);
     String description1 = description;
-    String usernumber1 = "+919574337205";
+    String usernumber1 = "+91$usernumber";
     String departments = concatenateList(departmentSid);
     Map<String, dynamic> jsonData = {
       "location": {
         "type": "Point",
-        "coordinates": [72.90135322499116, 21.25141024985171]
+        "coordinates": _location
+        // "coordinates": [72.90135322499116, 21.25141024985171]
       },
       "description": description1,
-      "number": usernumber1,
+      "number": "$usernumber1",
       "department": departments
     };
     String perfectJson = jsonEncode(jsonData);
@@ -58,4 +77,6 @@ class ReportProvider extends ChangeNotifier {
   String concatenateList(List<String> inputList) {
     return inputList.join('::');
   }
+
+
 }
