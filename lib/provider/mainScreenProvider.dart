@@ -10,9 +10,9 @@ class MainScreenProvider extends ChangeNotifier {
   var policeList = [];
 
   //DEPARTMENT LOcation
-  var firedepartmentLocationList = [];
-  var policedepartmentLocationList = [];
-  var hospitaldepartmentLocationList = [];
+  // var firedepartmentLocationList = [];
+  // var policedepartmentLocationList = [];
+  // var hospitaldepartmentLocationList = [];
 
   int _fire = 0;
   int _hospital = 0;
@@ -51,48 +51,48 @@ class MainScreenProvider extends ChangeNotifier {
 
         "https://rakshak-backend-dev.onrender.com/api/v1/organization/nearest-organization/$latitude,$longitude");
     var response = await http.get(url);
-    print('Response status: ${response.statusCode}');
-    print('get nearest location: ${response.body}');
+    // print('Response status: ${response.statusCode}');
+    // print('get nearest location: ${response.body}');
     nearestLocationDataModel =
         NearestLocationDataModel.fromJson(jsonDecode(response.body));
-    if (nearestLocationDataModel != null) {
-      for (var x in nearestLocationDataModel!.data!.department!) {
-        if (x.type!.toLowerCase() == "hospital") {
-          print(" hospital >>>>>${x.departments.runtimeType}");
-          for (final dep in x.departments!) {
-            hospitalDataList.add(dep);
-          }
-        }
-        if (x.type!.toLowerCase() == "fire") {
-          print(" fire >>>>>${x.departments.runtimeType}");
-          for (final dep in x.departments!) {
-            fireList.add(dep);
-          }
-        }
-        if (x.type!.toLowerCase() == "police") {
-          print("police >>>>>${x.departments.runtimeType}");
-          for (final dep in x.departments!) {
-            policeList.add(dep);
-          }
-        }
-      }
-      for (var x in nearestLocationDataModel!.data!.departmentLocation!) {
-
-     if(x.type=="Fire" ){
-       // print(" fire values ${x.}");
-       firedepartmentLocationList.add(x);
-       notifyListeners();
-
-     }
-     if(x.type=="Hospital"){
-       hospitaldepartmentLocationList.add(x);
-
-     }
-     if(x.type=="Police"){
-       policedepartmentLocationList.add(x);
-     }
-      }
-    }
+    // if (nearestLocationDataModel != null) {
+    //   for (var x in nearestLocationDataModel!.data!.department!) {
+    //     if (x.type!.toLowerCase() == "hospital") {
+    //       print(" hospital >>>>>${x.departments.runtimeType}");
+    //       for (final dep in x.departments!) {
+    //         hospitalDataList.add(dep);
+    //       }
+    //     }
+    //     if (x.type!.toLowerCase() == "fire") {
+    //       print(" fire >>>>>${x.departments.runtimeType}");
+    //       for (final dep in x.departments!) {
+    //         fireList.add(dep);
+    //       }
+    //     }
+    //     if (x.type!.toLowerCase() == "police") {
+    //       print("police >>>>>${x.departments.runtimeType}");
+    //       for (final dep in x.departments!) {
+    //         policeList.add(dep);
+    //       }
+    //     }
+    //   }
+    //   for (var x in nearestLocationDataModel!.data!.departmentLocation!) {
+    //
+    //  if(x.type=="Fire" ){
+    //    // print(" fire values ${x.}");
+    //    firedepartmentLocationList.add(x);
+    //    notifyListeners();
+    //
+    //  }
+    //  if(x.type=="Hospital"){
+    //    hospitaldepartmentLocationList.add(x);
+    //
+    //  }
+    //  if(x.type=="Police"){
+    //    policedepartmentLocationList.add(x);
+    //  }
+    //   }
+    // }
 
     Map<String, dynamic> jsonResponse = json.decode(response.body);
     List<dynamic> departments = jsonResponse['data']['department'];
@@ -116,16 +116,16 @@ class MainScreenProvider extends ChangeNotifier {
     }
 
     // Printing the filtered lists
-    print('Police Stations:');
-    print(policeList1[0]);
-    print(policeList1[1]);
-    print(policeList1[2]);
-
-    print('\nFire Stations:');
-    print(fireList1);
-
-    print('\nHospitals:');
-    print(hospitalList1);
+    // print('Police Stations:');
+    // print(policeList1[0]);
+    // print(policeList1[1]);
+    // print(policeList1[2]);
+    //
+    // print('\nFire Stations:');
+    // print(fireList1);
+    //
+    // print('\nHospitals:');
+    // print(hospitalList1);
     notifyListeners();
 
 

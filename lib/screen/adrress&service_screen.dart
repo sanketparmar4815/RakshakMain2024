@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rakashkh/app/Palette.dart';
-import 'package:rakashkh/app/assets.dart';
 import 'package:rakashkh/app/dimensions.dart';
+import 'package:rakashkh/screen/BottomNavScreen.dart';
 import 'package:rakashkh/screen/Cart_services.dart';
-import 'package:rakashkh/screen/HomeScreenMap.dart';
-import 'package:rakashkh/widgets/text_widget.dart';
+import 'package:rakashkh/screen/address/Service_page.dart';
 
 class AddressServicesScreen extends StatefulWidget {
   const AddressServicesScreen({super.key});
@@ -29,12 +28,44 @@ class _AddressServicesScreenState extends State<AddressServicesScreen>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Palette.appbar,
+        centerTitle: true,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (context) {
+                  return const BottomNavBar();
+                },
+              ));
+            },
+            icon: const Icon(Icons.arrow_back)),
+        title: const Text("Service",
+            style: TextStyle(
+              color: Palette.white,
+              fontSize: 24,
+              fontFamily: "Gilroy-Bold",
+              fontWeight: FontWeight.bold,
+            )),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 15),
+            child: IconButton(
+              icon: const Icon(
+                Icons.translate,
+                color: Colors.white,
+              ),
+              onPressed: () {},
+              color: Colors.white,
+            ),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-             return HomeScreenMap();
-           },));
+            Navigator.pushReplacement(context, MaterialPageRoute(
+              builder: (context) {
+                return const BottomNavBar();
+              },
+            ));
           },
           child: const CircleAvatar(
             radius: 80,
@@ -42,37 +73,43 @@ class _AddressServicesScreenState extends State<AddressServicesScreen>
             foregroundColor: Colors.transparent,
             backgroundImage: AssetImage("assets/main button (1).png"),
           )),
-      floatingActionButtonLocation:
-      FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       // bottomNavigationBar: _buildBottomTab(),
       bottomNavigationBar: Row(
         children: [
           InkWell(
             onTap: () {
-
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                return const AddressServicesScreen();
-              },));
+              Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (context) {
+                  return const AddressServicesScreen();
+                },
+              ));
             },
             child: Container(
               margin: const EdgeInsets.all(15),
-              child: Image.asset("assets/search.png", height: 30,),
+              child: Image.asset(
+                "assets/search.png",
+                height: 30,
+              ),
             ),
           ),
-         const Spacer(),
+          const Spacer(),
           InkWell(
             onTap: () {
-
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                return AddressServicesScreen();
-              },));
+              Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (context) {
+                  return const AddressServicesScreen();
+                },
+              ));
             },
             child: Container(
               margin: const EdgeInsets.all(15),
-              child: Image.asset("assets/search.png", height: 30,),
+              child: Image.asset(
+                "assets/search.png",
+                height: 30,
+              ),
             ),
           ),
-
         ],
       ),
       body: Column(
@@ -86,11 +123,11 @@ class _AddressServicesScreenState extends State<AddressServicesScreen>
       color: Palette.lightMain,
       child: TabBar(
           indicatorColor: Palette.appbar,
-         unselectedLabelColor: Palette.white,
+          unselectedLabelColor: Palette.white,
           indicatorWeight: 3,
           controller: tabController,
-          labelStyle:
-              const TextStyle(fontSize: 17, fontWeight: FontWeight.w700,color: Palette.white),
+          labelStyle: const TextStyle(
+              fontSize: 17, fontWeight: FontWeight.w700, color: Palette.white),
           tabs: const [
             Tab(
               text: "Address",
@@ -106,75 +143,75 @@ class _AddressServicesScreenState extends State<AddressServicesScreen>
     return TabBarView(
       controller: tabController,
       children: [
-        _addressView(),
+        // _addressView(),
+        const ServiceScreen(),
+        // Serviceaddress("surat",),
         CartServices(isColor: true),
       ],
     );
   }
 
+// Widget _addressView() {
+//   return ListView(
+//     children: [],
+//   );
+// }
 
-
-  Widget _addressView() {
-    return ListView(
-      children: [],
-    );
-  }
-
-  Widget _fireText() {
-    return  const Padding(
-      padding: EdgeInsets.only(left: 50),
-      child: Row(
-        children: [
-          Icon(
-            Icons.local_fire_department_sharp,
-            color: Palette.red,
-            size: 30,
-          ),
-          w10,
-          Texts(
-            "FIRE SERVICES",
-            fontWeight: FontWeight.bold,
-            color: Palette.redLight,
-            fontSize: 19,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _policeText() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 50),
-      child: Row(
-        children: [
-          Image.asset(Assets.police),
-          w10,
-          const Texts(
-            "POLICE SERVICES",
-            fontWeight: FontWeight.bold,
-            color: Palette.yellow,
-            fontSize: 19,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _hospitalText() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 50),
-      child: Row(
-        children: [
-          Image.asset(Assets.hospital),
-          w10,
-          const Texts(
-            "HOSPITAL SERVICES",
-            fontWeight: FontWeight.bold,
-            color: Palette.lightBlue,
-            fontSize: 19,
-          )
-        ],
-      ),
-    );
-  }
+// Widget _fireText() {
+//   return const Padding(
+//     padding: EdgeInsets.only(left: 50),
+//     child: Row(
+//       children: [
+//         Icon(
+//           Icons.local_fire_department_sharp,
+//           color: Palette.red,
+//           size: 30,
+//         ),
+//         w10,
+//         Texts(
+//           "FIRE SERVICES",
+//           fontWeight: FontWeight.bold,
+//           color: Palette.redLight,
+//           fontSize: 19,
+//         )
+//       ],
+//     ),
+//   );
+// }
+//
+// Widget _policeText() {
+//   return Padding(
+//     padding: const EdgeInsets.only(left: 50),
+//     child: Row(
+//       children: [
+//         Image.asset(Assets.police),
+//         w10,
+//         const Texts(
+//           "POLICE SERVICES",
+//           fontWeight: FontWeight.bold,
+//           color: Palette.yellow,
+//           fontSize: 19,
+//         )
+//       ],
+//     ),
+//   );
+// }
+//
+// Widget _hospitalText() {
+//   return Padding(
+//     padding: const EdgeInsets.only(left: 50),
+//     child: Row(
+//       children: [
+//         Image.asset(Assets.hospital),
+//         w10,
+//         const Texts(
+//           "HOSPITAL SERVICES",
+//           fontWeight: FontWeight.bold,
+//           color: Palette.lightBlue,
+//           fontSize: 19,
+//         )
+//       ],
+//     ),
+//   );
+// }
 }

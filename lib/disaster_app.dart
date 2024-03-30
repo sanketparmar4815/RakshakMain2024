@@ -4,23 +4,19 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:rakashkh/1Demo/Login_view.dart';
-import 'package:rakashkh/app/Palette.dart';
 import 'package:rakashkh/app/globals.dart';
 import 'package:rakashkh/auth/intro_screen.dart';
+import 'package:rakashkh/provider/UpdateMeProvider.dart';
 import 'package:rakashkh/provider/aboutmeProvider.dart';
 import 'package:rakashkh/provider/authprovider.dart';
 import 'package:rakashkh/provider/getAllVehicle.dart';
 import 'package:rakashkh/provider/mainScreenProvider.dart';
 import 'package:rakashkh/provider/reportProvider.dart';
 import 'package:rakashkh/screen/BottomNavScreen.dart';
-import 'package:rakashkh/screen/HomeScreenMap.dart';
 import 'package:rakashkh/utils/context_ext.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '1Demo/view_model/auth_view_model.dart';
-
-
 
 class DisasterApp extends StatefulWidget {
   const DisasterApp({Key? key}) : super(key: key);
@@ -58,7 +54,8 @@ class DisasterAppState extends State<DisasterApp> {
       providers: [
         ChangeNotifierProvider(
           create: (context) => AuthenticationProvider(),
-        ),ChangeNotifierProvider(
+        ),
+        ChangeNotifierProvider(
           create: (context) => AboutMeProvider(),
         ),
         ChangeNotifierProvider(
@@ -67,19 +64,23 @@ class DisasterAppState extends State<DisasterApp> {
         ChangeNotifierProvider(
           create: (context) => ReportProvider(),
         ),
-
-        ChangeNotifierProvider(create: (context) => GetAllVehicles(),),
-        ChangeNotifierProvider(create: (context) => AuthViewModel(),)
+        ChangeNotifierProvider(
+          create: (context) => UpdateMeProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => GetAllVehicles(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AuthViewModel(),
+        )
       ],
       child: MaterialApp(
-
         title: "Si Eclipse",
         debugShowCheckedModeBanner: false,
 
-
-         theme: ThemeData(
-           appBarTheme: const AppBarTheme(iconTheme: IconThemeData(color: Colors.white))
-         ),
+        theme: ThemeData(
+            appBarTheme: const AppBarTheme(
+                iconTheme: IconThemeData(color: Colors.white))),
         // theme: Palette.lightTheme,
         // darkTheme: Palette.darkTheme,
         // themeMode: context.watch<ThemeProvider>().isDarkMode ? ThemeMode.dark : ThemeMode.light,
@@ -119,7 +120,7 @@ class PreLoaderState extends State<PreLoader> {
   @override
   Widget build(BuildContext context) {
     // return const BottomNavBar();
-    return const LoginScreenDemo();
-    // return const IntroScreen();
+    // return const LoginScreenDemo();
+    return const IntroScreen();
   }
 }

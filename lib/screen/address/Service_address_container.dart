@@ -1,24 +1,28 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rakashkh/app/dimensions.dart';
 
-class Serviceaddress extends StatefulWidget {
-  String? Address;
-  String? AddressType;
-  void Function()? Delete;
-  Serviceaddress(
-      {required this.Address, required this.AddressType, required this.Delete});
+class ServiceAddress extends StatefulWidget {
+  final String? address;
+  final String? addressType;
+  final void Function()? delete;
+  const ServiceAddress(
+      {super.key,
+      required this.address,
+      required this.addressType,
+      required this.delete});
 
   @override
-  State<Serviceaddress> createState() => _ServiceaddressState();
+  State<ServiceAddress> createState() => _ServiceAddressState();
 }
 
-class _ServiceaddressState extends State<Serviceaddress> {
+class _ServiceAddressState extends State<ServiceAddress> {
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Container(
-      height: 100,
+      height: 120,
       margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -34,12 +38,12 @@ class _ServiceaddressState extends State<Serviceaddress> {
       ),
       child: Column(
         children: [
-          h5,
+          h10,
           Row(children: [
-            w10,
+            w20,
             Text(
-              "${widget.AddressType}",
-              style: TextStyle(
+              "${widget.addressType}",
+              style: const TextStyle(
                   fontFamily: "Gilroy",
                   fontWeight: FontWeight.bold,
                   fontSize: 20),
@@ -49,22 +53,31 @@ class _ServiceaddressState extends State<Serviceaddress> {
               "assets/map-location.svg",
               height: 25,
             ),
-            const SizedBox(
-              width: 130,
+            SizedBox(
+              width: width * 0.2546,
             ),
             InkWell(
-              onTap: widget.Delete,
+              onTap: widget.delete,
               child: SvgPicture.asset(
                 "assets/trash-can-solid.svg",
                 height: 25,
               ),
             ),
           ]),
-          const Divider(),
+          const Divider(indent: 20, endIndent: 20),
           Container(
               alignment: Alignment.centerLeft,
               margin: const EdgeInsets.only(left: 10),
-              child: Text("\u2022 ${widget.Address} ")),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("\u2022"),
+                    Expanded(child: Text("${widget.address}")),
+                  ],
+                ),
+              )),
         ],
       ),
     );

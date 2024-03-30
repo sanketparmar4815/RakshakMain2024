@@ -4,9 +4,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rakashkh/app/Palette.dart';
 import 'package:rakashkh/app/dimensions.dart';
-import 'package:rakashkh/model/AboutMe.dart';
+import 'package:rakashkh/model/AboutMeModel.dart';
 import 'package:rakashkh/provider/aboutmeProvider.dart';
 import 'package:rakashkh/provider/authprovider.dart';
+import 'package:rakashkh/screen/BottomNavScreen.dart';
+import 'package:rakashkh/screen/HomeScreenMap.dart';
 import 'package:rakashkh/screen/Update_detail_user.dart';
 import 'package:rakashkh/widgets/button_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,14 +32,13 @@ class _SettingWithDestinationScreenState
   TextEditingController txtAddressController = TextEditingController();
 
   bool isHead = false;
-    late AboutMeProvider aboutMeProvider;
+  late AboutMeProvider aboutMeProvider;
 
   bool isEdit = false;
   List<IconData> iconList = [
     Icons.saved_search_sharp,
     Icons.explore_outlined,
   ];
-
 
   final LatLng _center = const LatLng(21.2266, 72.8312);
 
@@ -49,15 +50,13 @@ class _SettingWithDestinationScreenState
     // TODO: implement initState
     super.initState();
 
-
-aboutMeProvider = context.read<AboutMeProvider>();
+    aboutMeProvider = context.read<AboutMeProvider>();
 
     authProvider = context.read<AuthenticationProvider>();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await aboutMeProvider.getAboutMe().then((value) {
-        numberController.text = aboutMeProvider.name!;
-
-        nameController.text = aboutMeProvider.number!;
+        numberController.text = aboutMeProvider.number!;
+        nameController.text = aboutMeProvider.name!;
       });
     });
 
@@ -67,7 +66,6 @@ aboutMeProvider = context.read<AboutMeProvider>();
     // String username =
     //     GetIt.I.get<SharedPreferences>().getString("UserName") ?? "Name";
     // txtNameController.text = username;
-
   }
 
   @override
@@ -95,6 +93,11 @@ aboutMeProvider = context.read<AboutMeProvider>();
             ),
             onPressed: () {
               Navigator.pop(context);
+              // Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => const BottomNavBar(),
+              //     ));
             },
             color: Colors.white,
           ),
@@ -157,17 +160,17 @@ aboutMeProvider = context.read<AboutMeProvider>();
                         color: Color(0xFF253746)),
                   ),
                   // const SizedBox(width: 87),
-              SizedBox(
-                width: 150,
-                child: TextFormField(
-                  textAlign: TextAlign.end,
-                  readOnly: !isEdit,
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                      hintText: 'Enter your name',
-                      border: InputBorder.none),
-                ),
-              ),
+                  SizedBox(
+                    width: 150,
+                    child: TextFormField(
+                      textAlign: TextAlign.end,
+                      readOnly: !isEdit,
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                          hintText: 'Enter your name',
+                          border: InputBorder.none),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -205,7 +208,6 @@ aboutMeProvider = context.read<AboutMeProvider>();
                       readOnly: !isEdit,
                       controller: numberController,
                       keyboardType: TextInputType.number,
-
                       decoration: const InputDecoration(
                           hintText: 'Enter your number',
                           border: InputBorder.none),
@@ -322,12 +324,15 @@ aboutMeProvider = context.read<AboutMeProvider>();
             h15,
             FilledButtons(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return UpdateUserDetail(
-                          nameController.text, numberController.text);
-                    },
-                  ));
+                 if(nameController.text.isNotEmpty && numberController.text.isNotEmpty)
+                   {
+                     Navigator.push(context, MaterialPageRoute(
+                       builder: (context) {
+                         return UpdateUserDetail(
+                             nameController.text, numberController.text);
+                       },
+                     ));
+                   }
                 },
                 text: "Edit",
                 color: Palette.secondarycolor,
@@ -342,13 +347,13 @@ aboutMeProvider = context.read<AboutMeProvider>();
             //
             // },
             //     text: "Add Department",color: Palette.secondarycolor,width: 204,height: 50,borderRadius: 25),
-        // h10,
-        //               FilledButtons(onTap: () {
-        //                 setState(() {
-        //                   isHead = !isHead;
-        //                 });
-        //
-        //               }, text: "Trun on Head", color: Palette.secondarycolor,width: 204,height: 50,borderRadius: 25),
+            // h10,
+            //               FilledButtons(onTap: () {
+            //                 setState(() {
+            //                   isHead = !isHead;
+            //                 });
+            //
+            //               }, text: "Trun on Head", color: Palette.secondarycolor,width: 204,height: 50,borderRadius: 25),
 
             //
 

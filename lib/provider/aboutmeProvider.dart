@@ -1,6 +1,6 @@
 
 import 'package:flutter/foundation.dart';
-import 'package:rakashkh/model/AboutMe.dart';
+import 'package:rakashkh/model/AboutMeModel.dart';
 import 'package:http/http.dart' as http;
 
 class AboutMeProvider with ChangeNotifier
@@ -27,7 +27,10 @@ class AboutMeProvider with ChangeNotifier
 
 
   Future<bool> getAboutMe()  async {
-
+    // var header = {
+    //   'Content-type': 'application/json',
+    //   'Accept': 'application/json',
+    // };
 
     var header = {
       'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZmViMjIyZDBkMGFiMWE0YTFhZDI4ZiIsImlhdCI6MTcxMTI4NDIyNiwiZXhwIjoxNzE5MDYwMjI2fQ.jTbDpa76euiVqF1_3__iCzkmOUUx6lBrYmUl5-k5W18'
@@ -35,10 +38,10 @@ class AboutMeProvider with ChangeNotifier
     var url = Uri.parse("https://rakshak-backend-dev.onrender.com/api/v1/users/me");
 
     var response = await http.get(url,  headers: header);
-    if (kDebugMode) {
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-    }
+    // if (kDebugMode) {
+    //   print('Response status: ${response.statusCode}');
+    //   print('Response body: ${response.body}');
+    // }
 
     if (response.statusCode == 400) {
       return false;

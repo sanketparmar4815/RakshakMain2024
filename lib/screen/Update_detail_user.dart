@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rakashkh/app/Palette.dart';
 import 'package:rakashkh/app/dimensions.dart';
+import 'package:rakashkh/provider/UpdateMeProvider.dart';
 import 'package:rakashkh/screen/Settings_With_Destination.dart';
 import 'package:rakashkh/widgets/button_widgets.dart';
+
+import '../model/UpdateMeModel.dart';
+
 
 class UpdateUserDetail extends StatefulWidget {
   String username;
@@ -15,6 +20,7 @@ class UpdateUserDetail extends StatefulWidget {
 }
 
 class _UpdateUserDetailState extends State<UpdateUserDetail> {
+  late UpdateMeProvider _updateMeProvider;
   TextEditingController userName = TextEditingController();
   TextEditingController contactNumber = TextEditingController();
 
@@ -22,11 +28,13 @@ class _UpdateUserDetailState extends State<UpdateUserDetail> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _updateMeProvider = context.read<UpdateMeProvider>();
     userName.text = widget.username;
     contactNumber.text = widget.usernumber;
   }
   @override
   Widget build(BuildContext context) {
+    _updateMeProvider = context.watch<UpdateMeProvider>();
     return SafeArea(child: Scaffold(
       appBar: AppBar(
         backgroundColor: Palette.secondarycolor,
@@ -120,11 +128,15 @@ class _UpdateUserDetailState extends State<UpdateUserDetail> {
           h10,
           FilledButtons(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return SettingWithDestinationScreen();
-                  },
-                ));
+                print("${userName.text} ${contactNumber.text}");
+                _updateMeProvider.getUpdateMe(userName.text.toString() ,contactNumber.text.toString() ).then((value) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(
+                    builder: (context) {
+                      return const SettingWithDestinationScreen();
+                    },
+                  ));
+                },);
+
               },
               text: "Submit",
               color: Palette.appbar,
